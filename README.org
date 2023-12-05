@@ -1,0 +1,31 @@
+# -*- org-make-toc-link-type-fn: org-make-toc--link-entry-github; -*-
+:PROPERTIES:
+:CREATED: [2023-12-05 Tue 00:48]
+:MODIFIED: [2023-12-05 Tue 01:06]
+:END:
+
+#+title: Guile Web Server
+#+author: Connor Clark
+#+email: connor@psyleft.com
+
+Simple web server implemented in Guile scheme
+
+* About
+
+This is a very simple web server based on Guile's built-in ~run-server~ procedure, in under 100 LOC. It serves up files under a specified webroot, and is suitable for basic static websites.
+
+I haven't been able to find reference to this in the documentation, but based on experimental testing it seems Guile automatically prevents navigating out of webroot using relative paths in the ~split-and-decode-uri-path~ procedure, largely mitigating path-traversal attacks. I would still highly recommend deploying this to the public internet with caution.
+
+At this point in time, the script also lacks comprehensive error reporting. However, the only errors I have ever experienced are occasional broken pipes, which do not crash the server and only result in harmless console messages.
+
+* Usage
+
+#+begin_src
+Usage: ./server.scm PATH
+
+where PATH is the webserver root
+#+end_src
+
+The easiest way to get a Guile setup working is with GNU Guix. For convenience, a ~manifest.scm~ file is provided that contains the (minimal) dependencies needed to run the script. One can simply prepend ~guix shell -m ./manifest.scm --~ to the script invocation and it will be run in the proper environment. The script also assumes you have ~env~ from the GNU coreutils present at ~/usr/bin/env~ and ~sh~ in your PATH.
+
+NOTE: The xdg-mime database has to be properly configured on the system or else some MIME types will be reported incorrectly, specifically text/css. This shouldn't be a problem for most people, but it means the server may not work if you run it using ~guix shell --pure~.
