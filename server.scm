@@ -76,7 +76,7 @@ where PATH is the webserver root
                   . ,(list (mime-type path))))
                (call-with-input-file path get-bytevector-all))))))
 
-(run-server request-handler)
+(run-server request-handler 'http `(#:addr ,INADDR_ANY #:port 8080))
 
 ;;; Local Variables:
 ;;; mode: scheme
